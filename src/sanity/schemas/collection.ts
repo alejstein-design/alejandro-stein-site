@@ -118,12 +118,16 @@ export const collection = defineType({
   preview: {
     select: {
       title: 'title.en',
-      media: 'coverArtwork.images.0',
+      images: 'coverArtwork.images',
       subtitle: 'category',
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    prepare({ title, media, subtitle }: any) {
-      return { title: title ?? 'Untitled', subtitle, media }
+    prepare({ title, images, subtitle }: any) {
+      return {
+        title: title ?? 'Untitled',
+        subtitle,
+        media: Array.isArray(images) ? images[0] : images,
+      }
     },
   },
   orderings: [

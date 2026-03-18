@@ -25,7 +25,11 @@ export default function ArtworkWall({ artworks, lang, dict }: ArtworkWallProps) 
           artwork.homepageSize === 'large' || artwork.homepageSize === 'wide'
         const primaryImage = artwork.images?.[0]
         const imageUrl = primaryImage
-          ? urlFor(primaryImage).width(700).quality(75).auto('format').url()
+          ? urlFor(primaryImage)
+              .width(isWide ? 2400 : 1400)
+              .quality(80)
+              .auto('format')
+              .url()
           : null
         const altText =
           primaryImage?.alt?.[lang as 'es' | 'en'] ?? t(artwork.title, lang)
