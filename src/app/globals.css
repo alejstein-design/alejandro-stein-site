@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-background: #FAFAF8;
+  --color-foreground: #1A1A1A;
+  --color-muted: #6B6B6B;
+  --color-tertiary: #999999;
+  --color-accent-red: #E63946;
+  --color-accent-blue: #2563EB;
+  --color-border: #E8E5E0;
+
+  /* Fonts */
+  --font-sans: var(--font-inter), sans-serif;
+
+  /* Border radius — 0 everywhere (sharp edges) */
+  --radius: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-full: 0px;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* ── Fade-up entrance animation (opacity + translate) ────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.4s ease both;
+}
+
+/* ── Slide-up entrance animation (translate only — element stays visible) ── */
+/* Use this for LCP candidates so the browser can measure them immediately.  */
+@keyframes slide-up {
+  from { transform: translateY(28px); }
+  to   { transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease both;
+}
+
+/* ── Thin loading bar ────────────────────────────────────────────────────── */
+@keyframes loading-sweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+.animate-loading-bar {
+  animation: loading-sweep 1.4s ease-in-out infinite;
+}
