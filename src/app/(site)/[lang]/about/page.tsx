@@ -22,7 +22,21 @@ export async function generateMetadata({
 }) {
   const { lang } = await params
   const dict = getDictionary(lang)
-  return { title: `${dict.about} — Alejandro Stein` }
+  const description = lang === 'es'
+    ? 'Alejandro Stein es un artista visual autodidacta nacido en Buenos Aires, con obra en pintura, murales, tapices, arte digital y objetos mixtos.'
+    : 'Alejandro Stein is a Buenos Aires-born self-taught visual artist working across paintings, murals, tapestries, digital art, and mixed-media objects.'
+  return {
+    title: `${dict.about} — Alejandro Stein`,
+    description,
+    alternates: {
+      canonical: `https://alejandrostein.com/${lang}/about`,
+      languages: {
+        en: 'https://alejandrostein.com/en/about',
+        es: 'https://alejandrostein.com/es/about',
+      },
+    },
+    robots: { index: true, follow: true },
+  }
 }
 
 export default async function AboutPage({
@@ -62,7 +76,7 @@ export default async function AboutPage({
 
   return (
     <div>
-      <PageHeader title={lang === 'es' ? 'SOBRE' : 'ABOUT'} />
+      <PageHeader title="INFO" />
 
       <FadeUp delay={0.15}>
       <div className="max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] pb-24">

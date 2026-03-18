@@ -19,7 +19,21 @@ export async function generateMetadata({
 }) {
   const { lang } = await params
   const dict = getDictionary(lang)
-  return { title: `${dict.contact} — Alejandro Stein` }
+  const description = lang === 'es'
+    ? 'Contacta a Alejandro Stein para encargos de pinturas, murales y puertas pintadas.'
+    : 'Get in touch with Alejandro Stein for commissions — paintings, murals, and painted doors.'
+  return {
+    title: `${dict.contact} — Alejandro Stein`,
+    description,
+    alternates: {
+      canonical: `https://alejandrostein.com/${lang}/contact`,
+      languages: {
+        en: 'https://alejandrostein.com/en/contact',
+        es: 'https://alejandrostein.com/es/contact',
+      },
+    },
+    robots: { index: true, follow: true },
+  }
 }
 
 export default async function ContactPage({

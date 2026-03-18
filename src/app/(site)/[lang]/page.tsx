@@ -13,13 +13,38 @@ export async function generateMetadata({
 }: {
   params: Promise<{ lang: string }>
 }) {
-  const { lang: _lang } = await params
+  const { lang } = await params
+  const settings = await getSiteSettings().catch(() => null)
+
+  const isEs = lang === 'es'
+  const title = isEs
+    ? 'Alejandro Stein — Arte Geométrico y Patrones Sagrados'
+    : 'Alejandro Stein — Geometric Art & Sacred Patterns'
+  const description = isEs
+    ? 'Portfolio y obras de Alejandro Stein, artista visual que explora formas geométricas, patrones sagrados y técnica mixta. Buenos Aires · Tel Aviv · Berlín.'
+    : 'Portfolio and works of Alejandro Stein, visual artist exploring geometric forms, sacred patterns, and mixed media. Buenos Aires · Tel Aviv · Berlin.'
+
+  const heroSource = settings?.homepageHeroImage ?? null
+  const ogImageUrl = heroSource
+    ? urlFor(heroSource).width(1200).height(630).quality(80).auto('format').url()
+    : null
+
   return {
-    title: 'Alejandro Stein — Artist',
-    description:
-      'Buenos Aires-born visual artist working across paintings, murals, tapestries, digital art, and mixed media.',
+    title,
+    description,
     alternates: {
-      languages: { en: '/en', es: '/es' },
+      canonical: `https://alejandrostein.com/${lang}`,
+      languages: { en: 'https://alejandrostein.com/en', es: 'https://alejandrostein.com/es' },
+    },
+    robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      url: `https://alejandrostein.com/${lang}`,
+      siteName: 'Alejandro Stein',
+      locale: isEs ? 'es_AR' : 'en_US',
+      type: 'website',
+      ...(ogImageUrl ? { images: [{ url: ogImageUrl, width: 1200, height: 630 }] } : {}),
     },
   }
 }
@@ -48,8 +73,29 @@ export default async function HomePage({
     ? urlFor(heroSource).width(1920).quality(75).auto('format').url()
     : null
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Alejandro Stein',
+    url: 'https://alejandrostein.com',
+    sameAs: [
+      'https://instagram.com/alustein',
+    ],
+    jobTitle: 'Visual Artist',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Buenos Aires',
+      addressCountry: 'AR',
+    },
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {heroPreloadUrl && (
         <link rel="preload" as="image" href={heroPreloadUrl} />
       )}

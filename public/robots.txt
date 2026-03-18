@@ -1,0 +1,13 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /studio
+
+# Host
+Host: https://alejandrostein.com
+
+# Sitemaps
+Sitemap: https://alejandrostein.com/sitemap.xml

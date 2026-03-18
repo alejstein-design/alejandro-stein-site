@@ -24,8 +24,36 @@ export async function generateMetadata({
   const { lang, slug } = await params
   const collection = await getCollectionWithArtworks(slug)
   if (!collection) return {}
+
+  const title = `${t(collection.title, lang)} — Alejandro Stein`
+  const description = t(collection.description, lang) || (lang === 'es'
+    ? `Colección de obras de Alejandro Stein.`
+    : `A collection of works by Alejandro Stein.`)
+
+  const coverSource = collection.coverImage ?? collection.artworks[0]?.images?.[0] ?? null
+  const ogImageUrl = coverSource
+    ? urlFor(coverSource).width(1200).height(630).quality(80).auto('format').url()
+    : null
+
   return {
-    title: `${t(collection.title, lang)} — Alejandro Stein`,
+    title,
+    description,
+    alternates: {
+      canonical: `https://alejandrostein.com/${lang}/works/${slug}`,
+      languages: {
+        en: `https://alejandrostein.com/en/works/${slug}`,
+        es: `https://alejandrostein.com/es/works/${slug}`,
+      },
+    },
+    robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      url: `https://alejandrostein.com/${lang}/works/${slug}`,
+      siteName: 'Alejandro Stein',
+      type: 'website',
+      ...(ogImageUrl ? { images: [{ url: ogImageUrl, width: 1200, height: 630 }] } : {}),
+    },
   }
 }
 

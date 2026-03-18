@@ -16,7 +16,23 @@ export async function generateMetadata({
 }) {
   const { lang } = await params
   const dict = getDictionary(lang)
-  return { title: `${dict.works} — Alejandro Stein` }
+  const isEs = lang === 'es'
+  const title = `${dict.works} — Alejandro Stein`
+  const description = isEs
+    ? 'Explora las colecciones y obras de Alejandro Stein: pinturas, murales, tapices y arte digital.'
+    : 'Explore the collections and works of Alejandro Stein: paintings, murals, tapestries, and digital art.'
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `https://alejandrostein.com/${lang}/works`,
+      languages: {
+        en: 'https://alejandrostein.com/en/works',
+        es: 'https://alejandrostein.com/es/works',
+      },
+    },
+    robots: { index: true, follow: true },
+  }
 }
 
 export default async function WorksPage({

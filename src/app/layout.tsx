@@ -12,6 +12,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://alejandrostein.com'),
   title: 'Alejandro Stein',
   description: 'Artist portfolio — Buenos Aires · Tel Aviv · Berlin',
 }
