@@ -61,12 +61,21 @@ export default async function HomePage({
 
   const dict = getDictionary(lang)
 
-  // Parallel fetch — all gracefully handle Sanity not being configured yet
-  const [settings, featuredArtworks, featuredCollections] = await Promise.all([
+  // Parallel fetch — siteSettings is the primary source for homepage slots;
+  // document-level queries serve as fallbacks when slots aren't configured yet.
+  const [settings, fallbackArtworks, fallbackCollections] = await Promise.all([
     getSiteSettings().catch(() => null),
     getFeaturedArtworks().catch(() => []),
     getFeaturedCollections().catch(() => []),
   ])
+
+  const featuredArtworks = settings?.featuredArtworks?.length
+    ? settings.featuredArtworks
+    : fallbackArtworks
+
+  const featuredCollections = settings?.selectedCollections?.length
+    ? settings.selectedCollections
+    : fallbackCollections
 
   // Preload hero image — React 19 hoists <link rel="preload"> to <head>
   const heroSource = settings?.homepageHeroImage ?? featuredArtworks[0]?.images?.[0] ?? null

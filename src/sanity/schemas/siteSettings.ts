@@ -70,6 +70,22 @@ export const siteSettings = defineType({
       options: { hotspot: true },
     }),
     defineField({
+      name: 'featuredArtworks',
+      title: 'Featured Artworks (Homepage Grid)',
+      description: 'Select up to 8 artworks to show in the homepage grid.',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'artwork' }] }],
+      validation: (Rule) => Rule.max(8).warning('Maximum 8 artworks on the homepage'),
+    }),
+    defineField({
+      name: 'selectedCollections',
+      title: 'Selected Collections (Homepage)',
+      description: 'Select up to 6 collections to feature on the homepage.',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'collection' }] }],
+      validation: (Rule) => Rule.max(6).warning('Maximum 6 collections on the homepage'),
+    }),
+    defineField({
       name: 'instagramImages',
       title: 'Instagram Feed Images',
       description: 'Upload 8–12 recent Instagram posts. These appear on the Contact page.',

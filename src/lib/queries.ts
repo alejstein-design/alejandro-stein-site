@@ -102,13 +102,38 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
         ...,
         "lqip": asset->metadata.lqip
       },
+      "featuredArtworks": featuredArtworks[]-> {
+        _id,
+        title,
+        slug,
+        "images": images[] {
+          ...,
+          "lqip": asset->metadata.lqip
+        },
+        homepageSize,
+        sortOrder,
+        "collection": collection-> {
+          _id,
+          title,
+          slug
+        }
+      },
+      "selectedCollections": selectedCollections[]-> {
+        _id,
+        title,
+        slug,
+        coverImage,
+        year,
+        medium,
+        sortOrder
+      },
       "instagramImages": instagramImages[] {
         ...,
         "lqip": asset->metadata.lqip
       }
     }`,
     {},
-    { next: { revalidate: 300 } }
+    { next: { revalidate: 60 } }
   )
 }
 

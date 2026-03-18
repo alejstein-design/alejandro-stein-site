@@ -103,5 +103,7 @@ export interface SiteSettings {
   socialLinks?: Array<{ platform: string; url: string }>
   contactEmail?: string
   homepageHeroImage?: SanityImageWithLqip
+  featuredArtworks?: FeaturedArtwork[]
+  selectedCollections?: Collection[]
   instagramImages?: SanityImageWithLqip[]
 }
