@@ -4,6 +4,7 @@ import type { Locale } from '@/lib/i18n'
 import { getFeaturedArtworks, getSiteSettings, getFeaturedCollections } from '@/lib/queries'
 import { AboutSection, FeaturedCollectionsRow, ContactCTA } from '@/components/HomeSections'
 import HeroSection from '@/components/HeroSection'
+import HeroImage from '@/components/HeroImage'
 import ArtworkWall from '@/components/ArtworkWall'
 import SectionLabel from '@/components/SectionLabel'
 import { urlFor } from '@/lib/sanity'
@@ -100,31 +101,35 @@ export default async function HomePage({
         <link rel="preload" as="image" href={heroPreloadUrl} />
       )}
 
-      {/* 1. Hero — server component, renders immediately, no JS for above-fold content */}
-      <HeroSection
-        settings={settings}
-        featuredArtworks={featuredArtworks}
-        lang={lang}
-      />
+      {/* 1. Text zone — z-10 bg-white, scrolls normally above the sticky hero */}
+      <HeroSection settings={settings} lang={lang} />
 
-      {/* 2. Artwork wall */}
-      <section className="max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] py-16 border-t border-border">
-        <SectionLabel text={dict.selectedWorks} />
-        <ArtworkWall artworks={featuredArtworks} lang={lang} dict={dict} />
-      </section>
+      {/* 2. Sticky hero image — z-0, stays pinned while content scrolls over it */}
+      {heroSource && (
+        <HeroImage
+          image={heroSource}
+          alt={settings?.artistName ?? 'Alejandro Stein'}
+          lqip={heroSource.lqip ?? undefined}
+        />
+      )}
 
-      {/* 3. Brief about */}
-      <AboutSection bio={settings?.bio} lang={lang} dict={dict} />
+      {/* 3. Curtain — z-10 bg-[#FAFAF8], slides over the sticky hero on scroll */}
+      <div className="relative z-10 bg-[#FAFAF8]">
+        <section className="max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] py-16 border-t border-border">
+          <SectionLabel text={dict.selectedWorks} />
+          <ArtworkWall artworks={featuredArtworks} lang={lang} dict={dict} />
+        </section>
 
-      {/* 4. Featured collections row */}
-      <FeaturedCollectionsRow
-        collections={featuredCollections}
-        lang={lang}
-        dict={dict}
-      />
+        <AboutSection bio={settings?.bio} lang={lang} dict={dict} />
 
-      {/* 5. Contact CTA */}
-      <ContactCTA email={settings?.contactEmail} dict={dict} />
+        <FeaturedCollectionsRow
+          collections={featuredCollections}
+          lang={lang}
+          dict={dict}
+        />
+
+        <ContactCTA email={settings?.contactEmail} dict={dict} />
+      </div>
     </>
   )
 }
