@@ -127,14 +127,15 @@ export const artwork = defineType({
   preview: {
     select: {
       title: 'title.en',
-      media: 'images.0',
+      images: 'images',
       subtitle: 'collection.title.en',
     },
-    prepare({ title, media, subtitle }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    prepare({ title, images, subtitle }: any) {
       return {
         title: title ?? 'Untitled',
         subtitle,
-        media,
+        media: Array.isArray(images) ? images[0] : images,
       }
     },
   },
