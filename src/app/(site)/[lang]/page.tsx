@@ -124,7 +124,7 @@ export default async function HomePage({
 
       {/* 3. Curtain — z-10 bg-[#FAFAF8], slides over the sticky hero on scroll */}
       <div className="relative z-10 bg-[#FAFAF8]">
-        <section className="max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] pt-3 pb-16 border-t border-border">
+        <section className="max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] pt-[30px] pb-16 border-t border-border">
           <SectionLabel text={dict.selectedWorks} />
           <ArtworkWall artworks={featuredArtworks} lang={lang} dict={dict} />
         </section>

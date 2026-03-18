@@ -13,9 +13,9 @@ export default function HeroSection({ settings, lang }: HeroSectionProps) {
   return (
     <section
       className="relative z-10 w-full"
-      style={{ background: 'linear-gradient(to bottom, #FFFFFF 65%, transparent 100%)' }}
+      style={{ background: 'linear-gradient(to bottom, #FFFFFF 50%, transparent 100%)' }}
     >
-      <div className="max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] pt-10 pb-20">
+      <div className="max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] pt-12 pb-10">
         <h1 className="animate-slide-up text-[clamp(3rem,8vw,6rem)] font-semibold uppercase tracking-[0.02em] text-foreground leading-[0.95] mb-3">
           {artistName}
         </h1>
