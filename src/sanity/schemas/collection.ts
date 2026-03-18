@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { CoverImagePreview } from '../components/CoverImagePreview'
 
 export const collection = defineType({
   name: 'collection',
@@ -71,6 +72,7 @@ export const collection = defineType({
         disableNew: true,
       },
       validation: (Rule) => Rule.required(),
+      components: { field: CoverImagePreview },
     }),
     defineField({
       name: 'year',
@@ -118,6 +120,10 @@ export const collection = defineType({
       title: 'title.en',
       media: 'coverArtwork.images.0',
       subtitle: 'category',
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    prepare({ title, media, subtitle }: any) {
+      return { title: title ?? 'Untitled', subtitle, media }
     },
   },
   orderings: [
