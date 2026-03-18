@@ -27,7 +27,7 @@ export default async function SiteLayout({
     <div className="flex flex-col min-h-screen">
       <Header lang={lang} dict={dict} />
       <main className="flex-1 pt-14">{children}</main>
-      <Footer lang={lang} dict={dict} />
+      <Footer />
     </div>
   )
 }

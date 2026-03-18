@@ -1,11 +1,10 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getDictionary, locales } from '@/lib/i18n'
+import { getDictionary, locales, t } from '@/lib/i18n'
 import type { Locale } from '@/lib/i18n'
 import { getSiteSettings } from '@/lib/queries'
 import PageHeader from '@/components/PageHeader'
-import FadeUp from '@/components/FadeUp'
-import SectionLabel from '@/components/SectionLabel'
+import SocialIcons from '@/components/SocialIcons'
 import InstagramFeed from '@/components/InstagramFeed'
 
 export async function generateStaticParams() {
@@ -47,80 +46,67 @@ export default async function ContactPage({
   const dict = getDictionary(lang)
   const settings = await getSiteSettings().catch(() => null)
 
-  const email = settings?.contactEmail ?? 'alejandrosteinart@gmail.com'
-  const instagramImages = settings?.instagramImages ?? []
-
-  const commissionNote =
-    lang === 'es'
+  const email           = settings?.contactEmail ?? 'alejandrosteinart@gmail.com'
+  const studioLocation  = settings?.studioLocation ?? 'Buenos Aires, Argentina'
+  const commissionsText = t(settings?.commissionsText, lang) ||
+    (lang === 'es'
       ? 'Abierto a encargos de pintura, murales y puertas pintadas.'
-      : 'Open to commissions for paintings, murals, and painted doors.'
+      : 'Open to commissions for paintings, murals, and painted doors.')
+  const socialLinks     = settings?.socialLinks ?? {}
+  const instagramImages = settings?.instagramImages ?? []
+  const handle          = settings?.instagramHandle ?? 'alustein'
+
+  const labelClass = 'text-[14px] font-medium italic uppercase tracking-widest text-muted pt-[3px]'
+  const valueClass = 'text-[15px] text-foreground leading-[1.6]'
 
   return (
     <div>
       <PageHeader title={lang === 'es' ? 'CONTACTO' : 'CONTACT'} />
 
       <div className="max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] pb-24">
-        <div className="max-w-[720px]">
 
-          {/* Email */}
-          <FadeUp delay={0.15}>
-            <div className="mb-10">
-              <SectionLabel text="Email" />
-              <a
-                href={`mailto:${email}`}
-                className="text-[16px] text-foreground hover:underline underline-offset-2 leading-[1.8] transition-colors"
-              >
-                {email}
-              </a>
+        {/* ── Contact info grid ─────────────────────────────────────────── */}
+        <div className="max-w-[600px]">
+          <div
+            className="grid gap-y-3"
+            style={{ gridTemplateColumns: '110px 1fr' }}
+          >
+            {/* Email */}
+            <span className={labelClass}>Email</span>
+            <a
+              href={`mailto:${email}`}
+              className={`${valueClass} hover:underline underline-offset-2 transition-colors`}
+            >
+              {email}
+            </a>
+
+            {/* Studio */}
+            <span className={labelClass}>{lang === 'es' ? 'Estudio' : 'Studio'}</span>
+            <p className={valueClass}>{studioLocation}</p>
+
+            {/* Commissions */}
+            <span className={labelClass}>{lang === 'es' ? 'Encargos' : 'Commissions'}</span>
+            <p className={valueClass}>{commissionsText}</p>
+          </div>
+
+          {/* Social icons */}
+          {Object.values(socialLinks).some(Boolean) && (
+            <div className="mt-8" style={{ color: '#1A1A1A' }}>
+              <SocialIcons links={socialLinks} />
             </div>
-          </FadeUp>
-
-          {/* Instagram */}
-          <FadeUp delay={0.25}>
-            <div className="mb-10">
-              <SectionLabel text="Instagram" />
-              <a
-                href="https://instagram.com/alustein"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[16px] text-foreground hover:underline underline-offset-2 leading-[1.8] transition-colors"
-              >
-                @alustein
-              </a>
-            </div>
-          </FadeUp>
-
-          {/* Studio */}
-          <FadeUp delay={0.35}>
-            <div className="mb-10">
-              <SectionLabel text={lang === 'es' ? 'Estudio' : 'Studio'} />
-              <p className="text-[16px] text-foreground leading-[1.8]">
-                Buenos Aires, Argentina
-              </p>
-            </div>
-          </FadeUp>
-
-          {/* Commissions */}
-          <FadeUp delay={0.45}>
-            <div className="mb-10">
-              <SectionLabel text={lang === 'es' ? 'Comisiones' : dict.commissions} />
-              <p className="text-[16px] text-foreground leading-[1.8]">
-                {commissionNote}
-              </p>
-            </div>
-          </FadeUp>
-
-          {/* Instagram feed */}
-          {instagramImages.length > 0 && (
-            <FadeUp delay={0.55}>
-              <InstagramFeed images={instagramImages} lang={lang} />
-            </FadeUp>
           )}
-
         </div>
 
-        {/* Footer nav */}
-        <div className="mt-16 pt-10 border-t border-border max-w-[720px]">
+        {/* ── Divider ───────────────────────────────────────────────────── */}
+        <div className="border-t border-border mt-10 mb-8" />
+
+        {/* ── Instagram feed ────────────────────────────────────────────── */}
+        {instagramImages.length > 0 && (
+          <InstagramFeed images={instagramImages} handle={handle} lang={lang} />
+        )}
+
+        {/* ── Back link ─────────────────────────────────────────────────── */}
+        <div className="mt-16 pt-10 border-t border-border max-w-[600px]">
           <Link
             href={`/${lang}/works`}
             className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted hover:text-foreground transition-colors"
@@ -128,6 +114,7 @@ export default async function ContactPage({
             ← {dict.works}
           </Link>
         </div>
+
       </div>
     </div>
   )

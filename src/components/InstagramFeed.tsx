@@ -1,34 +1,32 @@
 import Image from 'next/image'
-import SectionLabel from '@/components/SectionLabel'
 import { urlFor } from '@/lib/sanity'
 import type { SanityImageWithLqip } from '@/types/sanity'
 
 interface InstagramFeedProps {
   images: SanityImageWithLqip[]
+  handle: string
   lang: string
 }
 
-export default function InstagramFeed({ images, lang }: InstagramFeedProps) {
+export default function InstagramFeed({ images, handle, lang }: InstagramFeedProps) {
   if (!images.length) return null
 
-  const followLabel =
-    lang === 'es'
-      ? 'Seguí a @alustein en Instagram →'
-      : 'Follow @alustein on Instagram →'
+  const sectionLabel = lang === 'es' ? 'LO ÚLTIMO EN INSTAGRAM' : 'LATEST ON INSTAGRAM'
+  const profileUrl = `https://instagram.com/${handle}`
 
   return (
-    <div className="mt-20 pt-12 border-t border-border">
-      <div className="mb-6">
-        <SectionLabel text="Instagram" />
-      </div>
+    <div>
+      <p className="text-[14px] font-medium italic uppercase tracking-widest text-muted mb-4">
+        {sectionLabel}
+      </p>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-[4px]">
         {images.map((img, i) => {
-          const url = urlFor(img).width(350).quality(75).auto('format').url()
+          const url = urlFor(img).width(600).quality(80).auto('format').url()
           return (
             <a
               key={i}
-              href="https://instagram.com/alustein"
+              href={profileUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="group relative block aspect-square overflow-hidden bg-border"
@@ -49,12 +47,12 @@ export default function InstagramFeed({ images, lang }: InstagramFeedProps) {
       </div>
 
       <a
-        href="https://instagram.com/alustein"
+        href={profileUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block mt-6 text-[14px] text-muted hover:text-foreground transition-colors"
+        className="inline-block mt-5 text-[14px] text-muted hover:text-foreground transition-colors"
       >
-        {followLabel}
+        @{handle} →
       </a>
     </div>
   )

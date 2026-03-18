@@ -95,13 +95,23 @@ export interface Exhibition {
   sortOrder?: number
 }
 
+export interface SocialLinks {
+  instagram?: string | null
+  facebook?: string | null
+  twitter?: string | null
+  linkedin?: string | null
+}
+
 export interface SiteSettings {
   _id: string
   artistName?: string
   tagline?: BilingualString
   bio?: BilingualText
-  socialLinks?: Array<{ platform: string; url: string }>
   contactEmail?: string
+  studioLocation?: string
+  commissionsText?: BilingualString
+  socialLinks?: SocialLinks
+  instagramHandle?: string
   homepageHeroImage?: SanityImageWithLqip
   featuredArtworks?: FeaturedArtwork[]
   selectedCollections?: Collection[]

@@ -102,8 +102,11 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
       artistName,
       tagline,
       bio,
-      socialLinks,
       contactEmail,
+      studioLocation,
+      commissionsText,
+      socialLinks,
+      instagramHandle,
       "homepageHeroImage": homepageHeroImage {
         ...,
         "lqip": asset->metadata.lqip

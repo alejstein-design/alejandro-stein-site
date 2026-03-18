@@ -27,42 +27,53 @@ export const siteSettings = defineType({
       title: 'Bio (short — for homepage)',
       type: 'object',
       fields: [
-        {
-          name: 'es',
-          title: 'Spanish',
-          type: 'array',
-          of: [{ type: 'block' }],
-        },
-        {
-          name: 'en',
-          title: 'English',
-          type: 'array',
-          of: [{ type: 'block' }],
-        },
+        { name: 'es', title: 'Spanish', type: 'array', of: [{ type: 'block' }] },
+        { name: 'en', title: 'English', type: 'array', of: [{ type: 'block' }] },
       ],
     }),
-    defineField({
-      name: 'socialLinks',
-      title: 'Social Links',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            { name: 'platform', title: 'Platform', type: 'string' },
-            { name: 'url', title: 'URL', type: 'url' },
-          ],
-          preview: {
-            select: { title: 'platform', subtitle: 'url' },
-          },
-        },
-      ],
-    }),
+
+    // ── Contact info ──────────────────────────────────────────────────────
     defineField({
       name: 'contactEmail',
       title: 'Contact Email',
       type: 'string',
     }),
+    defineField({
+      name: 'studioLocation',
+      title: 'Studio Location',
+      type: 'string',
+      description: 'e.g. "Buenos Aires, Argentina"',
+    }),
+    defineField({
+      name: 'commissionsText',
+      title: 'Commissions Text',
+      type: 'object',
+      fields: [
+        { name: 'es', title: 'Spanish', type: 'text', rows: 2 },
+        { name: 'en', title: 'English', type: 'text', rows: 2 },
+      ],
+    }),
+
+    // ── Social links ──────────────────────────────────────────────────────
+    defineField({
+      name: 'socialLinks',
+      title: 'Social Links',
+      type: 'object',
+      fields: [
+        defineField({ name: 'instagram', title: 'Instagram URL', type: 'url' }),
+        defineField({ name: 'facebook', title: 'Facebook URL', type: 'url' }),
+        defineField({ name: 'twitter', title: 'X / Twitter URL', type: 'url' }),
+        defineField({ name: 'linkedin', title: 'LinkedIn URL', type: 'url' }),
+      ],
+    }),
+    defineField({
+      name: 'instagramHandle',
+      title: 'Instagram Handle',
+      type: 'string',
+      description: 'Without the @ sign, e.g. "alustein"',
+    }),
+
+    // ── Homepage images ───────────────────────────────────────────────────
     defineField({
       name: 'homepageHeroImage',
       title: 'Homepage Hero Image',
@@ -85,13 +96,15 @@ export const siteSettings = defineType({
       of: [{ type: 'reference', to: [{ type: 'collection' }] }],
       validation: (Rule) => Rule.max(6).warning('Maximum 6 collections on the homepage'),
     }),
+
+    // ── Contact page Instagram feed ───────────────────────────────────────
     defineField({
       name: 'instagramImages',
       title: 'Instagram Feed Images',
-      description: 'Upload 8–12 recent Instagram posts. These appear on the Contact page.',
+      description: 'Upload up to 4 recent Instagram post images. These appear on the Contact page.',
       type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
-      validation: (Rule) => Rule.max(12),
+      validation: (Rule) => Rule.max(4).warning('Maximum 4 Instagram images'),
     }),
   ],
   preview: {
