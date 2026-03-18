@@ -16,7 +16,10 @@ export async function getAllCollections(): Promise<Collection[]> {
       slug,
       description,
       category,
-      coverImage,
+      "coverImage": coverArtwork->images[0] {
+        ...,
+        "lqip": asset->metadata.lqip
+      },
       year,
       medium,
       layoutStyle,
@@ -38,7 +41,10 @@ export async function getCollectionWithArtworks(
       slug,
       description,
       category,
-      coverImage,
+      "coverImage": coverArtwork->images[0] {
+        ...,
+        "lqip": asset->metadata.lqip
+      },
       year,
       medium,
       layoutStyle,
@@ -122,7 +128,10 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
         _id,
         title,
         slug,
-        coverImage,
+        "coverImage": coverArtwork->images[0] {
+          ...,
+          "lqip": asset->metadata.lqip
+        },
         year,
         medium,
         sortOrder
@@ -143,7 +152,10 @@ export async function getFeaturedCollections(): Promise<Collection[]> {
       _id,
       title,
       slug,
-      coverImage,
+      "coverImage": coverArtwork->images[0] {
+        ...,
+        "lqip": asset->metadata.lqip
+      },
       year,
       medium,
       sortOrder

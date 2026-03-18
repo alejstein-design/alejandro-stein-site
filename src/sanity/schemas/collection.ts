@@ -55,10 +55,21 @@ export const collection = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'coverImage',
+      name: 'coverArtwork',
       title: 'Cover Image',
-      type: 'image',
-      options: { hotspot: true },
+      description: 'Pick an artwork from this collection. Add artworks first, then return here to set the cover.',
+      type: 'reference',
+      to: [{ type: 'artwork' }],
+      options: {
+        filter: ({ document }: { document: { _id?: string } }) =>
+          document._id
+            ? {
+                filter: 'collection._ref == $collectionId',
+                params: { collectionId: document._id.replace(/^drafts\./, '') },
+              }
+            : { filter: '_type == "artwork"' },
+        disableNew: true,
+      },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -105,7 +116,7 @@ export const collection = defineType({
   preview: {
     select: {
       title: 'title.en',
-      media: 'coverImage',
+      media: 'coverArtwork.images.0',
       subtitle: 'category',
     },
   },
