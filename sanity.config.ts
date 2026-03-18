@@ -17,37 +17,6 @@ export default defineConfig({
         S.list()
           .title('Content')
           .items([
-            // ── Homepage ─────────────────────────────────────────────────────
-            S.listItem()
-              .title('Homepage')
-              .id('homepage')
-              .child(
-                S.list()
-                  .title('Homepage')
-                  .items([
-                    S.listItem()
-                      .title('Homepage Artworks')
-                      .id('homepageArtworks')
-                      .child(
-                        S.documentList()
-                          .title('Homepage Artworks')
-                          .schemaType('artwork')
-                          .filter('_type == "artwork" && featured == true')
-                          .defaultOrdering([{ field: 'sortOrder', direction: 'asc' }])
-                      ),
-                    S.listItem()
-                      .title('Homepage Collections')
-                      .id('homepageCollections')
-                      .child(
-                        S.documentList()
-                          .title('Homepage Collections')
-                          .schemaType('collection')
-                          .filter('_type == "collection" && featured == true')
-                          .defaultOrdering([{ field: 'sortOrder', direction: 'asc' }])
-                      ),
-                  ])
-              ),
-            S.divider(),
             // ── Site Settings ────────────────────────────────────────────────
             S.listItem()
               .title('Site Settings')
