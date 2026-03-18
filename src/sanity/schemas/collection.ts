@@ -71,7 +71,7 @@ export const collection = defineType({
             : { filter: '_type == "artwork"' },
         disableNew: true,
       },
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.warning('A cover image is recommended'),
       components: { field: CoverImagePreview },
     }),
     defineField({
