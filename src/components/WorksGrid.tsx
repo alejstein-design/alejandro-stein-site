@@ -145,7 +145,11 @@ export default function WorksGrid({ collections, lang, dict }: WorksGridProps) {
     if (category === 'all') {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
-      document.getElementById(`section-${category}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      const el = document.getElementById(`section-${category}`)
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 36
+        window.scrollTo({ top, behavior: 'smooth' })
+      }
     }
   }
 
