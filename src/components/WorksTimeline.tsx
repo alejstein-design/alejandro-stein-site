@@ -11,11 +11,6 @@ const EVENT_TYPE_LABELS: Record<string, { en: string; es: string }> = {
   milestone: { en: 'Milestone',        es: 'Hito' },
 }
 
-const PULL_QUOTE = {
-  en: '"My work is based on exploring geometric forms and the multiple interactions generated through the combination of patterns and colors. They are born from a seed that will eventually grow fractally and without limits."',
-  es: '"Mi trabajo se basa en explorar e investigar formas geométricas y las múltiples interacciones que se pueden generar a través de la combinación de patrones y colores. Nacen de una semilla, que eventualmente, crecerá fractal e ilimitadamente."',
-}
-
 type TimelineItem =
   | { kind: 'event';      year: number; data: CareerEvent }
   | { kind: 'collection'; year: number; data: Collection }
@@ -27,7 +22,6 @@ interface Props {
 }
 
 export default function WorksTimeline({ events, collections, lang }: Props) {
-  // Parse collection year from string like "2021" or "2018 — Present"
   const items: TimelineItem[] = [
     ...events.map((e) => ({ kind: 'event' as const, year: e.year, data: e })),
     ...collections.map((c) => ({
@@ -49,56 +43,89 @@ export default function WorksTimeline({ events, collections, lang }: Props) {
   }
 
   return (
-    <div className="max-w-[860px]">
-      {yearGroups.map(([year, groupItems], groupIdx) => (
-        <div key={year}>
-          {/* Year group row */}
-          <div className="grid grid-cols-1 md:grid-cols-[80px_1px_1fr] md:gap-x-8">
+    <div className="max-w-[900px]">
+      {yearGroups.map(([year, groupItems]) => {
+        const yearEvents     = groupItems.filter((i) => i.kind === 'event')      as { kind: 'event';      year: number; data: CareerEvent }[]
+        const yearCollections = groupItems.filter((i) => i.kind === 'collection') as { kind: 'collection'; year: number; data: Collection }[]
 
-            {/* Year label */}
-            <div className="md:text-right pb-1 md:pb-0 md:pt-0.5">
-              <span className="text-[2.5rem] md:text-[3rem] font-semibold leading-none text-[#E8E5E0] tracking-tight tabular-nums">
-                {year || '—'}
-              </span>
-            </div>
-
-            {/* Vertical line + dot — desktop only */}
-            <div className="hidden md:flex flex-col items-center">
-              <div className="w-[7px] h-[7px] bg-[#1A1A1A] mt-[6px] shrink-0" />
-              <div className="w-px flex-1 bg-[#E8E5E0]" />
-            </div>
-
-            {/* Content */}
-            <div className="pb-12 pl-4 border-l border-[#E8E5E0] md:border-l-0 md:pl-0 space-y-5">
-              {groupItems.map((item) =>
-                item.kind === 'event' ? (
-                  <EventCard key={item.data._id} event={item.data} lang={lang} />
-                ) : (
-                  <CollectionCard key={item.data._id} collection={item.data} lang={lang} />
-                )
-              )}
-            </div>
-          </div>
-
-          {/* Pull quote after 2021 group */}
-          {year === 2021 && (
+        return (
+          <div key={year}>
+            {/* ── Desktop: 3-column grid ── Mobile: stacked ──────────── */}
             <div className="grid grid-cols-1 md:grid-cols-[80px_1px_1fr] md:gap-x-8">
-              <div className="hidden md:block" />
-              <div className="hidden md:block bg-[#E8E5E0] w-px" />
-              <div className="pb-10 pl-4 border-l border-[#E8E5E0] md:border-l-0 md:pl-0">
-                <p className="text-[14px] italic text-muted leading-relaxed border-l-2 border-[#E8E5E0] pl-4 max-w-lg">
-                  {lang === 'es' ? PULL_QUOTE.es : PULL_QUOTE.en}
-                </p>
+
+              {/* Year label */}
+              <div className="md:text-right pb-2 md:pb-0 md:pt-1">
+                <span className="text-[2.5rem] md:text-[3rem] font-semibold leading-none text-[#E8E5E0] tracking-tight tabular-nums">
+                  {year || '—'}
+                </span>
+              </div>
+
+              {/* Vertical line + dot — desktop only */}
+              <div className="hidden md:flex flex-col items-center">
+                <div className="w-[7px] h-[7px] bg-[#1A1A1A] mt-[6px] shrink-0" />
+                <div className="w-px flex-1 bg-[#E8E5E0]" />
+              </div>
+
+              {/* Content column */}
+              <div className="pb-8 pl-4 border-l border-[#E8E5E0] md:border-l-0 md:pl-0">
+
+                {/* Events first — compact, text-forward */}
+                {yearEvents.length > 0 && (
+                  <div className="space-y-4 mb-5">
+                    {yearEvents.map((item) => (
+                      <EventCard key={item.data._id} event={item.data} lang={lang} />
+                    ))}
+                  </div>
+                )}
+
+                {/* Collections — visual centrepiece */}
+                {yearCollections.length === 1 && (
+                  <CollectionCardFull
+                    collection={yearCollections[0].data}
+                    lang={lang}
+                  />
+                )}
+
+                {yearCollections.length === 2 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {yearCollections.map((item) => (
+                      <CollectionCardHalf
+                        key={item.data._id}
+                        collection={item.data}
+                        lang={lang}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {yearCollections.length >= 3 && (
+                  <div>
+                    <CollectionCardFull
+                      collection={yearCollections[0].data}
+                      lang={lang}
+                    />
+                    <div className="grid grid-cols-2 gap-4 mt-4">
+                      {yearCollections.slice(1).map((item) => (
+                        <CollectionCardHalf
+                          key={item.data._id}
+                          collection={item.data}
+                          lang={lang}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
               </div>
             </div>
-          )}
-        </div>
-      ))}
+          </div>
+        )
+      })}
     </div>
   )
 }
 
-// ── Event Card ────────────────────────────────────────────────────────────────
+// ── Event Card — compact ──────────────────────────────────────────────────────
 
 function EventCard({ event, lang }: { event: CareerEvent; lang: string }) {
   const isAward = event.eventType === 'award'
@@ -114,21 +141,21 @@ function EventCard({ event, lang }: { event: CareerEvent; lang: string }) {
       : null
 
   return (
-    <div className="flex gap-3 items-start">
+    <div className="flex items-start gap-3">
       {thumbUrl && (
-        <div className="shrink-0 w-[72px] h-[72px] relative overflow-hidden bg-border">
+        <div className="shrink-0 w-[56px] h-[56px] relative overflow-hidden bg-border">
           <Image
             src={thumbUrl}
-            alt={title ?? ''}
+            alt=""
             fill
             className="object-cover"
-            sizes="72px"
+            sizes="56px"
           />
         </div>
       )}
       <div>
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-1">
-          <span className="text-[14px] font-semibold text-foreground leading-tight">{title}</span>
+          <span className="text-[13px] font-semibold text-foreground leading-tight">{title}</span>
           {event.eventType && (
             <span
               className="text-[10px] font-medium uppercase tracking-[0.08em] border px-2 py-0.5 leading-none"
@@ -155,41 +182,74 @@ function EventCard({ event, lang }: { event: CareerEvent; lang: string }) {
   )
 }
 
-// ── Collection Card ───────────────────────────────────────────────────────────
+// ── Collection Card — full width ──────────────────────────────────────────────
 
-function CollectionCard({ collection, lang }: { collection: Collection; lang: string }) {
+function CollectionCardFull({ collection, lang }: { collection: Collection; lang: string }) {
   const imageUrl = collection.coverImage?.asset
-    ? urlFor(collection.coverImage).width(240).height(240).quality(75).auto('format').url()
+    ? urlFor(collection.coverImage).width(1400).quality(80).auto('format').url()
     : null
-
-  const viewLabel = lang === 'es' ? 'Ver colección →' : 'View collection →'
+  const w = (collection.coverImage as { width?: number } | undefined)?.width ?? 1400
+  const h = (collection.coverImage as { height?: number } | undefined)?.height ?? 900
   const meta = [collection.year, t(collection.medium, lang)].filter(Boolean).join(' · ')
+  const viewLabel = lang === 'es' ? 'Ver colección →' : 'View collection →'
 
   return (
-    <Link
-      href={`/${lang}/works/${collection.slug.current}`}
-      className="group flex gap-3 items-start"
-    >
-      {imageUrl && (
-        <div className="shrink-0 w-[72px] h-[72px] relative overflow-hidden bg-border">
-          <Image
-            src={imageUrl}
-            alt={t(collection.title, lang)}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-            sizes="72px"
-          />
-        </div>
+    <Link href={`/${lang}/works/${collection.slug.current}`} className="block group mb-4">
+      {imageUrl ? (
+        <Image
+          src={imageUrl}
+          alt={t(collection.title, lang)}
+          width={w}
+          height={h}
+          className="w-full h-auto block"
+          sizes="(max-width: 768px) 100vw, 60vw"
+        />
+      ) : (
+        <div className="w-full aspect-[4/3] bg-border" />
       )}
-      <div>
-        <p className="text-[14px] font-semibold text-foreground uppercase tracking-[0.04em] leading-tight mb-1">
-          {t(collection.title, lang)}
-        </p>
-        {meta && <p className="text-[12px] text-muted leading-snug">{meta}</p>}
-        <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted group-hover:text-foreground transition-colors mt-1 inline-block">
-          {viewLabel}
-        </span>
-      </div>
+      <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-foreground mt-3">
+        {t(collection.title, lang)}
+      </p>
+      {meta && <p className="text-[12px] text-muted mt-1">{meta}</p>}
+      <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted mt-1">
+        {viewLabel}
+      </p>
+    </Link>
+  )
+}
+
+// ── Collection Card — half width (2-up grid) ──────────────────────────────────
+
+function CollectionCardHalf({ collection, lang }: { collection: Collection; lang: string }) {
+  const imageUrl = collection.coverImage?.asset
+    ? urlFor(collection.coverImage).width(800).quality(80).auto('format').url()
+    : null
+  const w = (collection.coverImage as { width?: number } | undefined)?.width ?? 800
+  const h = (collection.coverImage as { height?: number } | undefined)?.height ?? 900
+  const meta = [collection.year, t(collection.medium, lang)].filter(Boolean).join(' · ')
+  const viewLabel = lang === 'es' ? 'Ver colección →' : 'View collection →'
+
+  return (
+    <Link href={`/${lang}/works/${collection.slug.current}`} className="block group">
+      {imageUrl ? (
+        <Image
+          src={imageUrl}
+          alt={t(collection.title, lang)}
+          width={w}
+          height={h}
+          className="w-full h-auto block"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 30vw"
+        />
+      ) : (
+        <div className="w-full aspect-[4/3] bg-border" />
+      )}
+      <p className="text-[13px] font-semibold uppercase tracking-[0.05em] text-foreground mt-3">
+        {t(collection.title, lang)}
+      </p>
+      {meta && <p className="text-[12px] text-muted mt-1">{meta}</p>}
+      <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted mt-1">
+        {viewLabel}
+      </p>
     </Link>
   )
 }
