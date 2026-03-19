@@ -147,8 +147,11 @@ export default function WorksGrid({ collections, lang, dict }: WorksGridProps) {
     } else {
       const el = document.getElementById(`section-${category}`)
       if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY - 36
-        window.scrollTo({ top, behavior: 'smooth' })
+        const absoluteTop = el.getBoundingClientRect().top + window.scrollY
+        // When scrolling up the fixed navbar reappears (h-14 = 56px).
+        // Add its height to the offset so it never covers the section label.
+        const offset = absoluteTop < window.scrollY ? 56 + 36 : 36
+        window.scrollTo({ top: absoluteTop - offset, behavior: 'smooth' })
       }
     }
   }
