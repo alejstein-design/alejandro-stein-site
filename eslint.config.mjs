@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Sanity Studio dist output — large bundles that OOM ESLint
+    "dist/**",
+    "public/**",
+    "node_modules/**",
   ]),
 ]);
 

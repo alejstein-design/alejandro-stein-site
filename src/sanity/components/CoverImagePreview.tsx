@@ -10,7 +10,7 @@ export function CoverImagePreview(props: FieldProps) {
 
   useEffect(() => {
     if (!ref) {
-      setImageUrl(null)
+      setImageUrl(null) // eslint-disable-line react-hooks/set-state-in-effect
       return
     }
     client
@@ -32,20 +32,8 @@ export function CoverImagePreview(props: FieldProps) {
   return (
     <div>
       {renderDefault(props)}
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt=""
-          style={{
-            display: 'block',
-            width: '100%',
-            maxHeight: '320px',
-            objectFit: 'cover',
-            marginTop: '10px',
-            borderRadius: '2px',
-          }}
-        />
-      )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {imageUrl && <img src={imageUrl} alt="" style={{ display: 'block', width: '100%', maxHeight: '320px', objectFit: 'cover', marginTop: '10px', borderRadius: '2px' }} />}
     </div>
   )
 }
