@@ -45,6 +45,14 @@ export default defineConfig({
               .title('Exhibitions')
               .schemaType('exhibition')
               .child(S.documentTypeList('exhibition').title('Exhibitions')),
+            S.listItem()
+              .title('Career Events')
+              .schemaType('careerEvent')
+              .child(
+                S.documentTypeList('careerEvent')
+                  .title('Career Events')
+                  .defaultOrdering([{ field: 'year', direction: 'desc' }])
+              ),
           ]),
     }),
     visionTool(),

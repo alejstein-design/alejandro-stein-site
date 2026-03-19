@@ -85,6 +85,21 @@ export interface SanityPage {
   image?: SanityImageWithLqip
 }
 
+export interface CareerEvent {
+  _id: string
+  title: string
+  titleEs: string
+  year: number
+  eventType: 'solo' | 'group' | 'award' | 'milestone'
+  venue?: string
+  location?: string
+  locationEs?: string
+  description?: string
+  descriptionEs?: string
+  highlight?: boolean
+  image?: SanityImageWithLqip
+}
+
 export interface Exhibition {
   _id: string
   year?: string

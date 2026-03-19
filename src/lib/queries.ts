@@ -6,6 +6,7 @@ import type {
   SiteSettings,
   SanityPage,
   Exhibition,
+  CareerEvent,
 } from '@/types/sanity'
 
 export async function getAllCollections(): Promise<Collection[]> {
@@ -211,6 +212,27 @@ export async function getArtworkImageUrls(): Promise<string[]> {
     { next: { revalidate: 3600 } }
   )
   return result?.map((r) => r.url).filter(Boolean) ?? []
+}
+
+export async function getCareerEvents(): Promise<CareerEvent[]> {
+  return client.fetch(
+    `*[_type == "careerEvent"] | order(year desc) {
+      _id,
+      title,
+      titleEs,
+      year,
+      eventType,
+      venue,
+      location,
+      locationEs,
+      description,
+      descriptionEs,
+      highlight,
+      "image": image { ..., "lqip": asset->metadata.lqip }
+    }`,
+    {},
+    { next: { revalidate: 300 } }
+  )
 }
 
 export async function getAllCollectionSlugs(): Promise<string[]> {
