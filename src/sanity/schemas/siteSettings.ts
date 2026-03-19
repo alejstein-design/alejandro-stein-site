@@ -99,6 +99,12 @@ export const siteSettings = defineType({
 
     // ── Contact page Instagram feed ───────────────────────────────────────
     defineField({
+      name: 'beholdFeedId',
+      title: 'Behold Instagram Feed ID',
+      description: 'From behold.so dashboard → Feeds → Embed Code. e.g. "cbj6v4U5dR9dGucknTwk"',
+      type: 'string',
+    }),
+    defineField({
       name: 'instagramImages',
       title: 'Instagram Feed Images',
       description: 'Upload up to 4 recent Instagram post images. These appear on the Contact page.',

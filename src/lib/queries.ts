@@ -107,6 +107,7 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
       commissionsText,
       socialLinks,
       instagramHandle,
+      beholdFeedId,
       "homepageHeroImage": homepageHeroImage {
         ...,
         "lqip": asset->metadata.lqip
@@ -199,6 +200,17 @@ export async function getExhibitions(): Promise<Exhibition[]> {
     {},
     { next: { revalidate: 300 } }
   )
+}
+
+export async function getArtworkImageUrls(): Promise<string[]> {
+  const result = await client.fetch<Array<{ url: string }>>(
+    `*[_type == "artwork" && defined(images[0].asset)][]{
+      "url": images[0].asset->url
+    }`,
+    {},
+    { next: { revalidate: 3600 } }
+  )
+  return result?.map((r) => r.url).filter(Boolean) ?? []
 }
 
 export async function getAllCollectionSlugs(): Promise<string[]> {

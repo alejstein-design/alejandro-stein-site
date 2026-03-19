@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { getDictionary, locales } from '@/lib/i18n'
 import type { Locale } from '@/lib/i18n'
 import { getFeaturedArtworks, getSiteSettings, getFeaturedCollections } from '@/lib/queries'
-import { AboutSection, FeaturedCollectionsRow, ContactCTA } from '@/components/HomeSections'
+import { AboutSection, FeaturedCollectionsRow } from '@/components/HomeSections'
 import HeroSection from '@/components/HeroSection'
 import HeroImage from '@/components/HeroImage'
 import ArtworkWall from '@/components/ArtworkWall'
@@ -19,8 +19,8 @@ export async function generateMetadata({
 
   const isEs = lang === 'es'
   const title = isEs
-    ? 'Alejandro Stein — Arte Geométrico y Patrones Sagrados'
-    : 'Alejandro Stein — Geometric Art & Sacred Patterns'
+    ? 'Alejandro Stein — Artista Visual'
+    : 'Alejandro Stein — Visual Artist'
   const description = isEs
     ? 'Portfolio y obras de Alejandro Stein, artista visual que explora formas geométricas, patrones sagrados y técnica mixta. Buenos Aires · Tel Aviv · Berlín.'
     : 'Portfolio and works of Alejandro Stein, visual artist exploring geometric forms, sacred patterns, and mixed media. Buenos Aires · Tel Aviv · Berlin.'
@@ -46,6 +46,12 @@ export async function generateMetadata({
       locale: isEs ? 'es_AR' : 'en_US',
       type: 'website',
       ...(ogImageUrl ? { images: [{ url: ogImageUrl, width: 1200, height: 630 }] } : {}),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      ...(ogImageUrl ? { images: [ogImageUrl] } : {}),
     },
   }
 }
@@ -110,7 +116,7 @@ export default async function HomePage({
         <link rel="preload" as="image" href={heroPreloadUrl} />
       )}
 
-      {/* 1. Text zone — z-10 bg-white, scrolls normally above the sticky hero */}
+      {/* 1. Text zone — z-10, gradient bg white→transparent, overlaps hero via negative margin */}
       <HeroSection settings={settings} lang={lang} />
 
       {/* 2. Sticky hero image — z-0, stays pinned while content scrolls over it */}
@@ -137,7 +143,6 @@ export default async function HomePage({
           dict={dict}
         />
 
-        <ContactCTA email={settings?.contactEmail} dict={dict} />
       </div>
     </>
   )

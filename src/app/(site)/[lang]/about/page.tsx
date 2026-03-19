@@ -3,13 +3,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getDictionary, locales, t } from '@/lib/i18n'
 import type { Locale } from '@/lib/i18n'
-import { getPageBySlug, getExhibitions } from '@/lib/queries'
+import { getPageBySlug, getExhibitions, getArtworkImageUrls } from '@/lib/queries'
 import { urlFor } from '@/lib/sanity'
 import PageBody from '@/components/PageBody'
 import PageHeader from '@/components/PageHeader'
 import FadeUp from '@/components/FadeUp'
 import SectionLabel from '@/components/SectionLabel'
 import type { Exhibition } from '@/types/sanity'
+import AboutPortrait from '@/components/AboutPortrait'
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }))
@@ -25,8 +26,9 @@ export async function generateMetadata({
   const description = lang === 'es'
     ? 'Alejandro Stein es un artista visual autodidacta nacido en Buenos Aires, con obra en pintura, murales, tapices, arte digital y objetos mixtos.'
     : 'Alejandro Stein is a Buenos Aires-born self-taught visual artist working across paintings, murals, tapestries, digital art, and mixed-media objects.'
+  const title = `${dict.about} — Alejandro Stein`
   return {
-    title: `${dict.about} — Alejandro Stein`,
+    title,
     description,
     alternates: {
       canonical: `https://alejandrostein.com/${lang}/about`,
@@ -36,6 +38,15 @@ export async function generateMetadata({
       },
     },
     robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      url: `https://alejandrostein.com/${lang}/about`,
+      siteName: 'Alejandro Stein',
+      locale: lang === 'es' ? 'es_AR' : 'en_US',
+      type: 'website',
+    },
+    twitter: { card: 'summary_large_image', title, description },
   }
 }
 
@@ -48,16 +59,17 @@ export default async function AboutPage({
   if (!locales.includes(lang as Locale)) notFound()
 
   const dict = getDictionary(lang)
-  const [aboutPage, statementPage, exhibitions] = await Promise.all([
+  const [aboutPage, statementPage, exhibitions, artworkImages] = await Promise.all([
     getPageBySlug('about').catch(() => null),
     getPageBySlug('statement').catch(() => null),
     getExhibitions().catch(() => []),
+    getArtworkImageUrls().catch(() => []),
   ])
 
   const bioContent = aboutPage?.body?.[lang as 'es' | 'en']
   const statementContent = statementPage?.body?.[lang as 'es' | 'en']
   const portraitUrl = aboutPage?.image
-    ? urlFor(aboutPage.image).width(240).height(240).quality(90).auto('format').url()
+    ? urlFor(aboutPage.image).width(800).quality(90).auto('format').url()
     : null
 
   // Group exhibitions by year for the timeline
@@ -80,46 +92,42 @@ export default async function AboutPage({
 
       <FadeUp delay={0.15}>
       <div className="max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] pb-24">
-        <div className="max-w-[720px]">
-          {/* Portrait — small, sits above bio */}
-          {portraitUrl && (
-            <div className="relative w-24 h-24 overflow-hidden bg-border mb-8">
-              <Image
-                src={portraitUrl}
-                alt="Alejandro Stein"
-                fill
-                sizes="96px"
-                className="object-cover"
-                priority
-              />
-            </div>
-          )}
+        <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-x-16 gap-y-10 items-start">
 
-          {/* Bio text */}
-          {bioContent?.length ? (
-            <PageBody value={bioContent} />
-          ) : (
-            <p className="text-[16px] text-muted leading-[1.8]">
-              Alejandro Stein is a Buenos Aires-born self-taught visual artist
-              working across handmade paintings, murals, tapestries, digital art,
-              painted doors, and 3D mixed-media objects.
-            </p>
-          )}
-
-          {/* Statement section — always shows if statement page exists or as placeholder */}
-          <>
-            <hr className="border-border my-12" />
-            <SectionLabel text={dict.statement} />
-            {statementContent?.length ? (
-              <PageBody value={statementContent} />
+          {/* Bio + Statement column */}
+          <div>
+            {/* Bio text */}
+            {bioContent?.length ? (
+              <PageBody value={bioContent} />
             ) : (
-              <p className="text-[16px] italic text-muted leading-[1.8]">
-                {lang === 'es'
-                  ? '(Contenido próximamente)'
-                  : '(Content coming soon)'}
+              <p className="text-[16px] text-muted leading-[1.8]">
+                Alejandro Stein is a Buenos Aires-born self-taught visual artist
+                working across handmade paintings, murals, tapestries, digital art,
+                painted doors, and 3D mixed-media objects.
               </p>
             )}
-          </>
+
+            {/* Statement */}
+            <>
+              <hr className="border-border my-12" />
+              <SectionLabel text={dict.statement} />
+              {statementContent?.length ? (
+                <PageBody value={statementContent} />
+              ) : (
+                <p className="text-[16px] italic text-muted leading-[1.8]">
+                  {lang === 'es'
+                    ? '(Contenido próximamente)'
+                    : '(Content coming soon)'}
+                </p>
+              )}
+            </>
+          </div>
+
+          {/* Portrait column */}
+          {portraitUrl && (
+            <AboutPortrait src={portraitUrl} artworkImages={artworkImages} lang={lang} />
+          )}
+
         </div>
 
         {/* Exhibition history */}

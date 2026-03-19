@@ -115,5 +115,6 @@ export interface SiteSettings {
   homepageHeroImage?: SanityImageWithLqip
   featuredArtworks?: FeaturedArtwork[]
   selectedCollections?: Collection[]
+  beholdFeedId?: string
   instagramImages?: SanityImageWithLqip[]
 }

@@ -5,7 +5,7 @@ import type { Locale } from '@/lib/i18n'
 import { getSiteSettings } from '@/lib/queries'
 import PageHeader from '@/components/PageHeader'
 import SocialIcons from '@/components/SocialIcons'
-import InstagramFeed from '@/components/InstagramFeed'
+import BeholdFeed from '@/components/BeholdFeed'
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }))
@@ -21,8 +21,9 @@ export async function generateMetadata({
   const description = lang === 'es'
     ? 'Contacta a Alejandro Stein para encargos de pinturas, murales y puertas pintadas.'
     : 'Get in touch with Alejandro Stein for commissions — paintings, murals, and painted doors.'
+  const title = `${dict.contact} — Alejandro Stein`
   return {
-    title: `${dict.contact} — Alejandro Stein`,
+    title,
     description,
     alternates: {
       canonical: `https://alejandrostein.com/${lang}/contact`,
@@ -32,6 +33,15 @@ export async function generateMetadata({
       },
     },
     robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      url: `https://alejandrostein.com/${lang}/contact`,
+      siteName: 'Alejandro Stein',
+      locale: lang === 'es' ? 'es_AR' : 'en_US',
+      type: 'website',
+    },
+    twitter: { card: 'summary_large_image', title, description },
   }
 }
 
@@ -52,9 +62,12 @@ export default async function ContactPage({
     (lang === 'es'
       ? 'Abierto a encargos de pintura, murales y puertas pintadas.'
       : 'Open to commissions for paintings, murals, and painted doors.')
-  const socialLinks     = settings?.socialLinks ?? {}
-  const instagramImages = settings?.instagramImages ?? []
-  const handle          = settings?.instagramHandle ?? 'alustein'
+  const handle       = settings?.instagramHandle ?? 'alustein'
+  const beholdFeedId = settings?.beholdFeedId ?? 'cbj6v4U5dR9dGucknTwk'
+  const socialLinks  = {
+    ...settings?.socialLinks,
+    instagram: settings?.socialLinks?.instagram || `https://instagram.com/${handle}`,
+  }
 
   const labelClass = 'text-[14px] font-medium italic uppercase tracking-widest text-muted pt-[3px]'
   const valueClass = 'text-[15px] text-foreground leading-[1.6]'
@@ -67,10 +80,7 @@ export default async function ContactPage({
 
         {/* ── Contact info grid ─────────────────────────────────────────── */}
         <div className="max-w-[600px]">
-          <div
-            className="grid gap-y-3"
-            style={{ gridTemplateColumns: '110px 1fr' }}
-          >
+          <div className="grid gap-y-3 grid-cols-1 sm:grid-cols-[160px_1fr]">
             {/* Email */}
             <span className={labelClass}>Email</span>
             <a
@@ -100,10 +110,21 @@ export default async function ContactPage({
         {/* ── Divider ───────────────────────────────────────────────────── */}
         <div className="border-t border-border mt-10 mb-8" />
 
-        {/* ── Instagram feed ────────────────────────────────────────────── */}
-        {instagramImages.length > 0 && (
-          <InstagramFeed images={instagramImages} handle={handle} lang={lang} />
-        )}
+        {/* ── Instagram feed (Behold.so) ────────────────────────────────── */}
+        <div>
+          <p className="text-[14px] font-medium italic uppercase tracking-widest text-muted mb-4">
+            {lang === 'es' ? 'LO ÚLTIMO EN INSTAGRAM' : 'LATEST ON INSTAGRAM'}
+          </p>
+          <BeholdFeed feedId={beholdFeedId} />
+          <a
+            href={`https://instagram.com/${handle}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-5 text-[14px] text-muted hover:text-foreground transition-colors"
+          >
+            @{handle} →
+          </a>
+        </div>
 
         {/* ── Back link ─────────────────────────────────────────────────── */}
         <div className="mt-16 pt-10 border-t border-border max-w-[600px]">

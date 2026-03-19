@@ -32,6 +32,15 @@ export async function generateMetadata({
       },
     },
     robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      url: `https://alejandrostein.com/${lang}/works`,
+      siteName: 'Alejandro Stein',
+      locale: isEs ? 'es_AR' : 'en_US',
+      type: 'website',
+    },
+    twitter: { card: 'summary_large_image', title, description },
   }
 }
 

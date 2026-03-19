@@ -1,16 +1,16 @@
 interface PageHeaderProps {
   title: string
   subtitle?: string
-  /** Override the default pt-[120px] — useful when a back link precedes the header */
+  /** Override the default pt-10 */
   className?: string
 }
 
 export default function PageHeader({ title, subtitle, className }: PageHeaderProps) {
   return (
     <div
-      className={`animate-fade-up max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] pb-12 ${className ?? 'pt-[120px]'}`}
+      className={`animate-fade-up max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] pb-10 ${className ?? 'pt-10'}`}
     >
-      <h1 className="text-[clamp(28px,5vw,40px)] font-semibold uppercase tracking-[0.05em] text-foreground leading-none">
+      <h1 className="text-[clamp(2.25rem,6vw,4.5rem)] font-semibold uppercase tracking-[0.02em] text-foreground leading-[0.95]">
         {title}
       </h1>
       {subtitle && (

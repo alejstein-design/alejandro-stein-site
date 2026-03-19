@@ -46,7 +46,8 @@ export const page = defineType({
     }),
     defineField({
       name: 'image',
-      title: 'Image',
+      title: 'Portrait Photo',
+      description: 'Used as the portrait on the Info/About page (right column).',
       type: 'image',
       options: { hotspot: true },
     }),
