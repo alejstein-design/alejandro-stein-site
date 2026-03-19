@@ -10,22 +10,14 @@ import type { Dictionary } from '@/lib/i18n'
 
 // ── Category config ───────────────────────────────────────────────────────────
 
-const CATEGORY_ORDER = [
-  'handmade', 'digital', 'murals', 'tapestries', 'mixed-media',
-  'doors', 'portraits', 'mosaico-refractario', 'combinacion', 'architectural-patterns',
-]
+const CATEGORY_ORDER = ['canvas', 'digital', 'murals', 'textiles', 'mixed-media']
 
 const CATEGORY_LABELS: Record<string, { en: string; es: string }> = {
-  'handmade':               { en: 'Painting',            es: 'Pintura' },
-  'digital':                { en: 'Digital',             es: 'Digital' },
-  'murals':                 { en: 'Murals',              es: 'Murales' },
-  'tapestries':             { en: 'Textiles',            es: 'Textiles' },
-  'mixed-media':            { en: 'Mixed Media',         es: 'Técnica Mixta' },
-  'doors':                  { en: 'Doors',               es: 'Puertas' },
-  'portraits':              { en: 'Portraits',           es: 'Retratos' },
-  'mosaico-refractario':    { en: 'Mosaico Refractario', es: 'Mosaico Refractario' },
-  'combinacion':            { en: 'Combinación',         es: 'Combinación' },
-  'architectural-patterns': { en: 'Arch. Patterns',      es: 'Patrones Arq.' },
+  'canvas':      { en: 'Canvas',      es: 'Canvas' },
+  'digital':     { en: 'Digital',     es: 'Digital' },
+  'murals':      { en: 'Murals',      es: 'Murales' },
+  'textiles':    { en: 'Textiles',    es: 'Textiles' },
+  'mixed-media': { en: 'Mixed Media', es: 'Técnica Mixta' },
 }
 
 function catLabel(category: string, lang: string) {
@@ -127,10 +119,12 @@ export default function WorksGrid({ collections, lang, dict }: WorksGridProps) {
         setActiveSection('all')
         return
       }
-      // Walk sections bottom-up; first one whose top is above threshold is active
+      // Walk sections bottom-up; first one whose top is above threshold is active.
+      // Threshold 96px > max programmatic offset (92px) so the spy agrees with
+      // where we land after a sidebar click.
       for (let i = grouped.length - 1; i >= 0; i--) {
         const el = document.getElementById(`section-${grouped[i].category}`)
-        if (el && el.getBoundingClientRect().top <= 80) {
+        if (el && el.getBoundingClientRect().top <= 96) {
           setActiveSection(grouped[i].category)
           return
         }
@@ -142,6 +136,9 @@ export default function WorksGrid({ collections, lang, dict }: WorksGridProps) {
   }, [grouped])
 
   function scrollTo(category: string) {
+    // Set active immediately so the indicator responds at click time,
+    // not after the animation completes.
+    setActiveSection(category)
     if (category === 'all') {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
@@ -149,7 +146,7 @@ export default function WorksGrid({ collections, lang, dict }: WorksGridProps) {
       if (el) {
         const absoluteTop = el.getBoundingClientRect().top + window.scrollY
         // When scrolling up the fixed navbar reappears (h-14 = 56px).
-        // Add its height to the offset so it never covers the section label.
+        // Add its height so the section label lands below the navbar.
         const offset = absoluteTop < window.scrollY ? 56 + 36 : 36
         window.scrollTo({ top: absoluteTop - offset, behavior: 'smooth' })
       }
