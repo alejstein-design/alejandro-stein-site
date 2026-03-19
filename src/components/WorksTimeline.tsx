@@ -29,9 +29,9 @@ const ALIGN_CLASSES: Record<CollectionSize, string> = {
 }
 
 const URLFOR_WIDTH: Record<CollectionSize, number> = {
-  large:  1200,
-  medium: 800,
-  small:  600,
+  large:  700,
+  medium: 500,
+  small:  380,
 }
 
 // ── Event type labels ─────────────────────────────────────────────────────────
@@ -142,7 +142,7 @@ export default function WorksTimeline({ events, collections, lang }: Props) {
                       key={item.data._id}
                       collection={item.data}
                       lang={lang}
-                      width={800}
+                      width={500}
                     />
                   ))}
                 </div>
@@ -168,7 +168,7 @@ export default function WorksTimeline({ events, collections, lang }: Props) {
                         key={item.data._id}
                         collection={item.data}
                         lang={lang}
-                        width={800}
+                        width={500}
                       />
                     ))}
                   </div>
