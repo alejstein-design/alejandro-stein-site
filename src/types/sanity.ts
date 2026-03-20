@@ -131,5 +131,4 @@ export interface SiteSettings {
   featuredArtworks?: FeaturedArtwork[]
   selectedCollections?: Collection[]
   beholdFeedId?: string
-  instagramImages?: SanityImageWithLqip[]
 }

@@ -106,7 +106,12 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
       contactEmail,
       studioLocation,
       commissionsText,
-      socialLinks,
+      "socialLinks": {
+        "instagram": socialLinks[lower(platform) == "instagram"][0].url,
+        "facebook":  socialLinks[lower(platform) == "facebook"][0].url,
+        "twitter":   socialLinks[lower(platform) == "twitter" || lower(platform) == "x"][0].url,
+        "linkedin":  socialLinks[lower(platform) == "linkedin"][0].url,
+      },
       instagramHandle,
       beholdFeedId,
       "homepageHeroImage": homepageHeroImage {
@@ -141,10 +146,6 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
         medium,
         sortOrder
       },
-      "instagramImages": instagramImages[] {
-        ...,
-        "lqip": asset->metadata.lqip
-      }
     }`,
     {},
     { next: { revalidate: 60 } }
