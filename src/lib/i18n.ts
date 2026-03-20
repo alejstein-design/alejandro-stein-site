@@ -4,6 +4,7 @@ export const defaultLocale: Locale = 'en'
 
 const dictionaries = {
   en: {
+    home: 'Home',
     works: 'Works',
     about: 'Info',
     statement: 'Statement',
@@ -31,6 +32,7 @@ const dictionaries = {
     group: 'Group',
   },
   es: {
+    home: 'Inicio',
     works: 'Obras',
     about: 'Info',
     statement: 'Declaración',
@@ -60,6 +62,7 @@ const dictionaries = {
 } as const
 
 export type Dictionary = {
+  home: string
   works: string
   about: string
   statement: string

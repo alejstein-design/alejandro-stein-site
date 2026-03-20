@@ -1,5 +1,3 @@
-'use client'
-
 import Link from 'next/link'
 import Image from 'next/image'
 import { urlFor } from '@/lib/sanity'
@@ -26,7 +24,7 @@ export default function ArtworkWall({ artworks, lang, dict }: ArtworkWallProps) 
         const primaryImage = artwork.images?.[0]
         const imageUrl = primaryImage
           ? urlFor(primaryImage)
-              .width(isWide ? 2400 : 1400)
+              .width(isWide ? 1920 : 800)
               .quality(80)
               .auto('format')
               .url()

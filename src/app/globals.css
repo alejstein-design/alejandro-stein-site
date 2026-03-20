@@ -51,6 +51,28 @@ body {
   animation: slide-up 0.6s ease both;
 }
 
+/* ── Behold Instagram widget — full width, left-aligned ─────────────────── */
+.behold-wrapper {
+  width: 100%;
+}
+
+.behold-wrapper behold-widget,
+behold-widget {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  --behold-columns: 2;
+}
+
+@media (min-width: 768px) {
+  .behold-wrapper behold-widget,
+  behold-widget {
+    --behold-columns: 3;
+  }
+}
+
 /* ── Thin loading bar ────────────────────────────────────────────────────── */
 @keyframes loading-sweep {
   0%   { transform: translateX(-100%); }
@@ -59,4 +81,10 @@ body {
 
 .animate-loading-bar {
   animation: loading-sweep 1.4s ease-in-out infinite;
+}
+
+/* ── Collection card shimmer ─────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
