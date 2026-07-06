@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { urlFor } from '@/lib/sanity'
-import { t } from '@/lib/i18n'
+import { t, CATEGORY_ORDER, CATEGORY_LABELS } from '@/lib/i18n'
 import type { Collection } from '@/types/sanity'
 import type { Dictionary } from '@/lib/i18n'
 
@@ -69,28 +69,50 @@ interface WorksGridProps {
 }
 
 export default function WorksGrid({ collections, lang, dict }: WorksGridProps) {
-  const rows = buildRows(collections)
+  // Agrupar por categoría, en el orden definido. Las categorías desconocidas
+  // (o sin categoría) se muestran al final para no ocultar nada.
+  const known = CATEGORY_ORDER as readonly string[]
+  const extras = Array.from(
+    new Set(collections.map((c) => c.category).filter((c): c is string => !!c && !known.includes(c)))
+  )
+  const order = [...known, ...extras]
+
+  const groups = order
+    .map((cat) => ({ cat, items: collections.filter((c) => c.category === cat) }))
+    .filter((g) => g.items.length > 0)
 
   return (
     <div className="max-w-[1400px] mx-auto px-[clamp(20px,4vw,48px)] pb-24">
-      {rows.map((row, rowIdx) => (
-        <div
-          key={rowIdx}
-          className="flex flex-col md:grid gap-5 mb-10"
-          style={{ gridTemplateColumns: row.gridCols }}
-        >
-          {row.items.map((collection) => (
-            <CollectionCard
-              key={collection._id}
-              collection={collection}
-              lang={lang}
-              dict={dict}
-              aspect={row.aspect}
-              imgWidth={row.imgWidth}
-            />
-          ))}
-        </div>
-      ))}
+      {groups.map(({ cat, items }) => {
+        const label = CATEGORY_LABELS[cat]
+          ? (lang === 'es' ? CATEGORY_LABELS[cat].es : CATEGORY_LABELS[cat].en)
+          : cat
+        return (
+          <section key={cat} className="mb-16 first:mt-0">
+            <h2 className="text-[13px] font-semibold uppercase tracking-[0.14em] text-muted mb-6 pb-2 border-b border-[#E8E5E0]">
+              {label}
+            </h2>
+            {buildRows(items).map((row, rowIdx) => (
+              <div
+                key={rowIdx}
+                className="flex flex-col md:grid gap-5 mb-10"
+                style={{ gridTemplateColumns: row.gridCols }}
+              >
+                {row.items.map((collection) => (
+                  <CollectionCard
+                    key={collection._id}
+                    collection={collection}
+                    lang={lang}
+                    dict={dict}
+                    aspect={row.aspect}
+                    imgWidth={row.imgWidth}
+                  />
+                ))}
+              </div>
+            ))}
+          </section>
+        )
+      })}
     </div>
   )
 }

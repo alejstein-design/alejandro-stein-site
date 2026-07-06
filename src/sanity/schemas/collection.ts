@@ -42,10 +42,11 @@ export const collection = defineType({
       options: {
         list: [
           { title: 'Canvas', value: 'canvas' },
-          { title: 'Digital', value: 'digital' },
+          { title: 'Doors', value: 'doors' },
+          { title: 'Paper', value: 'paper' },
+          { title: 'Tapestries', value: 'tapestries' },
           { title: 'Murals', value: 'murals' },
-          { title: 'Textiles', value: 'textiles' },
-          { title: 'Mixed Media', value: 'mixed-media' },
+          { title: 'Digital', value: 'digital' },
         ],
       },
       validation: (Rule) => Rule.required(),

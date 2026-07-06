@@ -90,6 +90,17 @@ export type Dictionary = {
   group: string
 }
 
+/** Orden y etiquetas de las categorías de Obras (bilingüe). */
+export const CATEGORY_ORDER = ['canvas', 'doors', 'paper', 'tapestries', 'murals', 'digital'] as const
+export const CATEGORY_LABELS: Record<string, { en: string; es: string }> = {
+  canvas: { en: 'Canvas', es: 'Canvas' },
+  doors: { en: 'Doors', es: 'Puertas' },
+  paper: { en: 'Paper', es: 'Papel' },
+  tapestries: { en: 'Tapestries', es: 'Tapices' },
+  murals: { en: 'Murals', es: 'Murales' },
+  digital: { en: 'Digital', es: 'Digital' },
+}
+
 export function getDictionary(lang: string): Dictionary {
   const locale = locales.includes(lang as Locale) ? (lang as Locale) : defaultLocale
   return dictionaries[locale]
